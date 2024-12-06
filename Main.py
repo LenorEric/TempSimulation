@@ -1,4 +1,5 @@
 import numpy as np
+import matplotlib.pyplot as plt
 
 from SetParam import *
 from ProgBar import progress_bar
@@ -24,6 +25,7 @@ def solve_u():
     for i in range(n):
         u_n[i] += dt * i_n[i] / C
 
+
 def solve_i_np():
     i_real = get_i_real(u_n_np[0], I_in)
     i_n_np[1:-1] = (u_n_np[:-2] - u_n_np[1:-1] + u_n_np[2:] - u_n_np[1:-1]) / R_sis + (up - u_n_np[1:-1]) / R_leak
@@ -37,18 +39,21 @@ def solve_u_np():
 
 
 if __name__ == '__main__':
-    u_n = [i + 15 for i in range(n)]
-    i_n = [0 for i in range(n)]
-    u_n_np = np.array(u_n, dtype=np.float64)
-    if np_mode:
-        i_n_np = np.array(i_n, dtype=np.float64)
     if T / dt != int(T / dt):
         print("T/dt must be an integer")
+    u_n = [2 * i for i in range(n)]
+    i_n = [0 for i in range(n)]
+    u_n_np = np.array(u_n, dtype=np.float64)
+    result = np.copy(u_n_np)
+    if np_mode:
+        i_n_np = np.array(i_n, dtype=np.float64)
     for itime in range(int(T / dt)):
         progress_bar(itime / (T / dt) * 100)
         if np_mode:
             solve_i_np()
             solve_u_np()
+            if itime % int(T / dt / (n * 4)) == 0:
+                result = np.vstack((result, u_n_np))
         else:
             solve_i()
             solve_u()
@@ -57,3 +62,10 @@ if __name__ == '__main__':
         print(u_n_np)
     else:
         print(u_n)
+
+    # draw result
+    result = result.T
+    result = result.copy()
+    print(result.shape)
+    plt.imshow(result, cmap='plasma')
+    plt.show()

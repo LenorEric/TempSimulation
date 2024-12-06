@@ -1,15 +1,14 @@
 C = 1
 R_sis = 0.1
-R_leak = 100000
-R_leak_L = 100000
-R_leak_R = 100000
+R_leak = 10000
+R_leak_L = 10000
+R_leak_R = 10000
 
-I_in = 0
+I_in = 50
 up = 25
 
-n = 100
+n = 50
 dt = 0.001
-T = 1000.0
+T = 100.0
 
 np_mode = True
-pre = 1000000
